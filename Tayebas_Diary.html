@@ -1,0 +1,3214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tayeba's Diary ☁️💙</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Tayeba's Diary">
+  <link id="appleIcon" rel="apple-touch-icon">
+  <link id="favIcon" rel="icon" type="image/png">
+  <!-- Dynamic Favicon Generator -->
+  <script>
+    (function() {
+      const c = document.createElement('canvas');
+      c.width = 512;
+      c.height = 512;
+      const ctx = c.getContext('2d');
+
+      // Soft pastel blue background
+      ctx.fillStyle = '#d6eaff';
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Pinterest-style blue circle badge
+      ctx.fillStyle = '#5c9ce6';
+      ctx.beginPath();
+      ctx.arc(256, 256, 200, 0, Math.PI * 2);
+      ctx.fill();
+
+      // White stylized Pinterest-like 'T'
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'italic bold 290px Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('T', 250, 272);
+
+      const iconUrl = c.toDataURL('image/png');
+      document.getElementById('appleIcon').href = iconUrl;
+      document.getElementById('favIcon').href = iconUrl;
+    })();
+  </script>
+  <!-- Firebase App & Realtime Database SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Comfortaa:wght@400;600;700&family=Dancing+Script:wght@600;700&family=Indie+Flower&family=Mali:ital,wght@0,400;0,600;0,700;1,400&family=Pacifico&family=Patrick+Hand&family=Quicksand:wght@500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f0f7ff;
+      --bg-dot: #c2dffc;
+      --card-bg: #ffffff;
+      --plan-card-bg: linear-gradient(180deg, #ffffff 0%, #f4f9ff 100%);
+      --primary-blue: #6aa9e9;
+      --soft-blue: #d6eaff;
+      --accent-blue: #4a89dc;
+      --btn-gradient: linear-gradient(135deg, #74b9ff, #4a89dc);
+      --text-dark: #2c3e50;
+      --text-muted: #6c8299;
+      --border-color: #dbeafe;
+      --header-bg: rgba(255, 255, 255, 0.9);
+      --input-bg: #f8fbff;
+      --shadow: 0 8px 20px rgba(106, 169, 233, 0.15);
+      --main-font: 'Mali', cursive;
+      --board-max-width: 1280px;
+      --board-padding: 24px;
+      --grid-gap: 22px;
+      --card-padding: 18px;
+    }
+
+    /* Teyvat Themes */
+    body[data-theme="mondstadt"] {
+      --bg-color: #0f172a;
+      --bg-dot: #1e3a5f;
+      --card-bg: #1e293b;
+      --plan-card-bg: linear-gradient(180deg, #1e293b 0%, #17253b 100%);
+      --primary-blue: #38bdf8;
+      --soft-blue: rgba(45, 212, 191, 0.16);
+      --accent-blue: #2dd4bf;
+      --btn-gradient: linear-gradient(135deg, #2dd4bf, #0284c7);
+      --text-dark: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --header-bg: rgba(15, 23, 42, 0.88);
+      --input-bg: #0f172a;
+      --shadow: 0 10px 25px rgba(2, 132, 199, 0.25);
+    }
+
+    body[data-theme="liyue"] {
+      --bg-color: #fffbf2;
+      --bg-dot: #f5d699;
+      --card-bg: #ffffff;
+      --plan-card-bg: linear-gradient(180deg, #ffffff 0%, #fff7e6 100%);
+      --primary-blue: #f59e0b;
+      --soft-blue: #fef3c7;
+      --accent-blue: #d97706;
+      --btn-gradient: linear-gradient(135deg, #fbbf24, #d97706);
+      --text-dark: #451a03;
+      --text-muted: #92400e;
+      --border-color: #fde68a;
+      --header-bg: rgba(255, 251, 242, 0.92);
+      --input-bg: #fffdf9;
+      --shadow: 0 8px 22px rgba(217, 119, 6, 0.15);
+    }
+
+    body[data-theme="inazuma"] {
+      --bg-color: #fdf4ff;
+      --bg-dot: #f0abfc;
+      --card-bg: #ffffff;
+      --plan-card-bg: linear-gradient(180deg, #ffffff 0%, #fae8ff 100%);
+      --primary-blue: #c084fc;
+      --soft-blue: #f3e8ff;
+      --accent-blue: #9333ea;
+      --btn-gradient: linear-gradient(135deg, #e879f9, #9333ea);
+      --text-dark: #3b0764;
+      --text-muted: #7e22ce;
+      --border-color: #f3e8ff;
+      --header-bg: rgba(253, 244, 255, 0.92);
+      --input-bg: #fefaff;
+      --shadow: 0 8px 22px rgba(147, 51, 234, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--main-font);
+      background-color: var(--bg-color);
+      background-image: radial-gradient(var(--bg-dot) 1.35px, transparent 1.35px);
+      background-size: 22px 22px;
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding-bottom: 80px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Floating Teyvat Primogem Sparkles + Cute Botanical Leaves & Flowers Layer */
+    .primogem-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .primogem-star {
+      position: absolute;
+      color: var(--primary-blue);
+      opacity: 0.35;
+      font-size: 1.1rem;
+      animation: twinkleFloat 6s ease-in-out infinite;
+      user-select: none;
+      filter: drop-shadow(0 0 6px var(--primary-blue));
+    }
+
+    .botanical-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-botanical-item {
+      position: absolute;
+      user-select: none;
+      opacity: 0.55;
+      animation: swayBotanical 8s ease-in-out infinite;
+      filter: drop-shadow(0 4px 8px rgba(106, 169, 233, 0.14));
+    }
+
+    .bg-vine-corner {
+      position: fixed;
+      width: 220px;
+      height: 220px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.65;
+    }
+
+    .bg-vine-corner.top-left {
+      top: 64px;
+      left: 0;
+    }
+
+    .bg-vine-corner.bottom-right {
+      bottom: 0;
+      right: 0;
+      transform: rotate(180deg);
+    }
+
+    @keyframes swayBotanical {
+      0%, 100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+      }
+      50% {
+        transform: translateY(-12px) rotate(8deg) scale(1.06);
+      }
+    }
+
+    @keyframes twinkleFloat {
+      0%, 100% {
+        transform: translateY(0) scale(0.85) rotate(0deg);
+        opacity: 0.2;
+      }
+      50% {
+        transform: translateY(-14px) scale(1.2) rotate(18deg);
+        opacity: 0.65;
+      }
+    }
+
+    /* Secret Passcode & Multi-Step Security Lock Screen */
+    .lock-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .lock-screen.hidden {
+      display: none !important;
+    }
+
+    .lock-card {
+      background: rgba(255, 255, 255, 0.96);
+      padding: 36px 28px;
+      border-radius: 28px;
+      box-shadow: 0 15px 40px rgba(74, 137, 220, 0.25);
+      border: 2px solid #ffffff;
+      text-align: center;
+      max-width: 410px;
+      width: 100%;
+      animation: popIn 0.25s ease-out;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .lock-card h1 {
+      font-family: 'Pacifico', cursive;
+      color: var(--accent-blue);
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+
+    .lock-card p {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .lock-step {
+      display: none;
+    }
+
+    .lock-step.active {
+      display: block;
+      animation: popIn 0.25s ease-out;
+    }
+
+    .lock-input {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--border-color);
+      font-family: 'Comfortaa', sans-serif;
+      font-size: 1rem;
+      text-align: center;
+      outline: none;
+      margin-bottom: 14px;
+      background: #f8fbff;
+      color: var(--text-dark);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .lock-input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 4px rgba(106, 169, 233, 0.15);
+    }
+
+    .lock-error {
+      color: #e03131;
+      font-size: 0.88rem;
+      margin-bottom: 12px;
+      display: none;
+      font-weight: 700;
+    }
+
+    .lock-hint-box {
+      background: #eef6ff;
+      border: 1.5px dashed #74b9ff;
+      color: #2b6cb0;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: none;
+      line-height: 1.45;
+    }
+
+    .unlock-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #74b9ff, #4a89dc);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 22px;
+      font-family: 'Comfortaa', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(74, 137, 220, 0.28);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .unlock-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(74, 137, 220, 0.36);
+    }
+
+    .choice-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      padding: 13px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--border-color);
+      background: #f8fbff;
+      color: var(--accent-blue);
+      font-family: 'Comfortaa', sans-serif;
+      font-weight: 700;
+      font-size: 0.96rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .choice-btn:hover {
+      background: var(--soft-blue);
+      border-color: var(--primary-blue);
+      transform: translateY(-2px);
+    }
+
+    .choice-btn.leave-choice {
+      color: #e03131;
+      border-color: #ffd8d8;
+      background: #fff9f9;
+    }
+
+    .choice-btn.leave-choice:hover {
+      background: #ffe3e3;
+      border-color: #ffa8a8;
+    }
+
+    /* WELCOME SCREEN (Opening Diary) */
+    .welcome-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-color);
+      background-image: radial-gradient(var(--bg-dot) 1.35px, transparent 1.35px);
+      background-size: 22px 22px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    
+    .welcome-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .welcome-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--border-color);
+      border-top: 4px solid var(--accent-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 24px;
+    }
+
+    .welcome-text {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.2rem;
+      color: var(--accent-blue);
+      animation: pulseText 2s infinite ease-in-out;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 0.7; transform: scale(0.98); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Header */
+    header {
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--border-color);
+      padding: 16px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.75rem;
+      font-weight: 400;
+      color: var(--accent-blue);
+    }
+    
+    .title-decor {
+      font-size: 1.25rem;
+      vertical-align: middle;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+      margin-left: 4px;
+    }
+
+    .brand span {
+      background: var(--soft-blue);
+      color: var(--accent-blue);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .guest-badge {
+      background: linear-gradient(135deg, #ffe8cc, #ffd8a8) !important;
+      color: #d9480f !important;
+      border: 1px solid #ffc078;
+      display: none;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-box, .font-select {
+      padding: 9px 14px;
+      border-radius: 22px;
+      border: 1.5px solid var(--border-color);
+      background: var(--input-bg);
+      font-family: var(--main-font);
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      outline: none;
+    }
+
+    .search-box {
+      width: 175px;
+    }
+
+    .btn-primary {
+      background: var(--btn-gradient);
+      color: white;
+      border: none;
+      padding: 10px 17px;
+      border-radius: 22px;
+      font-family: var(--main-font);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(74, 137, 220, 0.25);
+      transition: transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-soft {
+      background: var(--soft-blue);
+      color: var(--accent-blue);
+      border: none;
+      padding: 9px 14px;
+      border-radius: 20px;
+      font-family: var(--main-font);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .btn-soft:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Sadat's Special Welcome Banner */
+    .sadat-welcome-banner {
+      max-width: var(--board-max-width);
+      margin: 22px auto 6px;
+      padding: 0 var(--board-padding);
+      display: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sadat-banner-inner {
+      background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 50%, #ede9fe 100%);
+      border: 2px solid #93c5fd;
+      border-radius: 26px;
+      padding: 20px 26px;
+      box-shadow: 0 12px 28px rgba(74, 137, 220, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: popIn 0.4s ease-out;
+    }
+
+    .sadat-banner-text h2 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.45rem;
+      color: #2563eb;
+      font-weight: 400;
+      margin-bottom: 4px;
+    }
+
+    .sadat-banner-text p {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+
+    .sadat-banner-pill {
+      background: rgba(255, 255, 255, 0.85);
+      color: #1d4ed8;
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* Board Customization Bar (Layout, Margins, Aesthetics) */
+    .board-controls-bar {
+      max-width: var(--board-max-width);
+      margin: 16px auto 0;
+      padding: 0 var(--board-padding);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .control-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: var(--card-bg);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    .control-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
+
+    .mini-pill {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-family: var(--main-font);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mini-pill.active, .mini-pill:hover {
+      background: var(--soft-blue);
+      color: var(--accent-blue);
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      max-width: var(--board-max-width);
+      margin: 14px auto 0;
+      padding: 4px var(--board-padding) 8px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      position: relative;
+      z-index: 2;
+    }
+    .filter-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-pill {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: var(--main-font);
+      font-weight: 600;
+      font-size: 0.84rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover,
+    .filter-pill.active {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+    }
+
+    /* Pinterest Cute Decorative Margin Frames */
+    .diary-frame-wrapper {
+      max-width: var(--board-max-width);
+      margin: 22px auto 40px;
+      padding: 28px;
+      position: relative;
+      z-index: 2;
+      transition: all 0.35s ease;
+      border-radius: 32px;
+    }
+
+    .frame-corner-decor {
+      display: none;
+      position: absolute;
+      font-size: 1.55rem;
+      z-index: 5;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.1));
+    }
+
+    .frame-corner-decor.tl { top: -12px; left: -10px; transform: rotate(-12deg); }
+    .frame-corner-decor.tr { top: -12px; right: -10px; transform: rotate(12deg); }
+    .frame-corner-decor.bl { bottom: -12px; left: -10px; transform: rotate(12deg); }
+    .frame-corner-decor.br { bottom: -12px; right: -10px; transform: rotate(-12deg); }
+
+    /* 1. Botanical Vine Margin */
+    body[data-margin-theme="botanical"] .diary-frame-wrapper {
+      background: rgba(255, 255, 255, 0.52);
+      backdrop-filter: blur(4px);
+      border: 3px solid #a7f3d0;
+      box-shadow:
+        inset 0 0 0 6px rgba(255, 255, 255, 0.8),
+        inset 0 0 0 8px #86efac,
+        0 14px 35px rgba(34, 197, 94, 0.12);
+      background-image:
+        radial-gradient(circle at 12px 12px, rgba(134, 239, 172, 0.3) 2px, transparent 2px),
+        radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), rgba(244, 114, 182, 0.25) 2.5px, transparent 2.5px);
+      background-size: 32px 32px;
+      padding: 36px 32px;
+    }
+    body[data-margin-theme="botanical"] .frame-corner-decor {
+      display: block;
+    }
+
+    /* 2. Coquette Lace & Ribbon Margin */
+    body[data-margin-theme="coquette"] .diary-frame-wrapper {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(4px);
+      border: 4px dashed #f9a8d4;
+      outline: 6px solid rgba(255, 255, 255, 0.9);
+      box-shadow:
+        0 0 0 10px #fbcfe8,
+        0 16px 38px rgba(236, 72, 153, 0.15),
+        inset 0 0 24px rgba(244, 114, 182, 0.12);
+      padding: 36px 32px;
+    }
+    body[data-margin-theme="coquette"] .frame-corner-decor {
+      display: block;
+    }
+
+    /* 3. Checkered Gingham Washi Margin */
+    body[data-margin-theme="gingham"] .diary-frame-wrapper {
+      padding: 38px 34px;
+      border-radius: 30px;
+      background-color: rgba(255, 255, 255, 0.72);
+      border: 14px solid transparent;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.86)),
+        repeating-linear-gradient(45deg, rgba(116, 185, 255, 0.45) 0, rgba(116, 185, 255, 0.45) 12px, rgba(255, 255, 255, 0.9) 12px, rgba(255, 255, 255, 0.9) 24px),
+        repeating-linear-gradient(-45deg, rgba(116, 185, 255, 0.45) 0, rgba(116, 185, 255, 0.45) 12px, rgba(255, 255, 255, 0.9) 12px, rgba(255, 255, 255, 0.9) 24px);
+      background-origin: border-box;
+      background-clip: padding-box, border-box, border-box;
+      box-shadow: 0 12px 32px rgba(74, 137, 220, 0.18);
+    }
+    body[data-margin-theme="gingham"] .frame-corner-decor {
+      display: block;
+    }
+
+    /* 4. Teyvat Celestial Arch Margin */
+    body[data-margin-theme="celestial"] .diary-frame-wrapper {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(6px);
+      border: 2px solid #fbbf24;
+      box-shadow:
+        inset 0 0 0 6px rgba(255, 255, 255, 0.6),
+        inset 0 0 0 8px rgba(251, 191, 36, 0.45),
+        0 14px 36px rgba(217, 119, 6, 0.16);
+      padding: 36px 32px;
+    }
+    body[data-margin-theme="celestial"] .frame-corner-decor {
+      display: block;
+    }
+
+    /* 5. Minimal Cozy Cloud Margin */
+    body[data-margin-theme="cloud"] .diary-frame-wrapper {
+      background: rgba(255, 255, 255, 0.35);
+      border: 2px dotted var(--primary-blue);
+      padding: 24px;
+    }
+    body[data-margin-theme="cloud"] .frame-corner-decor {
+      display: block;
+    }
+
+    body[data-theme="mondstadt"] .diary-frame-wrapper {
+      background-color: rgba(15, 23, 42, 0.55);
+    }
+
+    /* Pinterest Masonry & Custom Layout Grid */
+    .container {
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .masonry-grid {
+      column-count: 4;
+      column-gap: var(--grid-gap);
+    }
+
+    .masonry-grid.layout-cozy {
+      column-count: 2;
+    }
+
+    .masonry-grid.layout-journal {
+      column-count: 1;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1100px) {
+      .masonry-grid:not(.layout-cozy):not(.layout-journal) { column-count: 3; }
+    }
+    @media (max-width: 780px) {
+      .masonry-grid:not(.layout-journal) { column-count: 2; }
+      .diary-frame-wrapper { padding: 18px 14px !important; margin: 14px 10px 30px; }
+    }
+    @media (max-width: 540px) {
+      .masonry-grid, .masonry-grid.layout-cozy { column-count: 1; }
+    }
+
+    /* Pin Card + Interactive Card Styles */
+    .pin-card {
+      background: var(--card-bg);
+      border-radius: 22px;
+      padding: var(--card-padding);
+      margin-bottom: var(--grid-gap);
+      break-inside: avoid;
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--border-color);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-radius 0.25s ease;
+      overflow: visible;
+      position: relative;
+      margin-top: 14px;
+    }
+
+    .pin-card.plan-card {
+      background: var(--plan-card-bg);
+    }
+
+    .pin-card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Washi Tape Strip at Top of Card */
+    .washi-tape {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 112px;
+      height: 26px;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(116, 185, 255, 0.62),
+        rgba(116, 185, 255, 0.62) 8px,
+        rgba(255, 255, 255, 0.78) 8px,
+        rgba(255, 255, 255, 0.78) 16px
+      );
+      border-left: 2px dotted rgba(255, 255, 255, 0.9);
+      border-right: 2px dotted rgba(255, 255, 255, 0.9);
+      box-shadow: 0 3px 7px rgba(0, 0, 0, 0.09);
+      z-index: 4;
+      pointer-events: none;
+      display: none;
+    }
+
+    .pin-card:nth-child(3n+2) .washi-tape {
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(244, 114, 182, 0.52),
+        rgba(244, 114, 182, 0.52) 9px,
+        rgba(255, 240, 246, 0.82) 9px,
+        rgba(255, 240, 246, 0.82) 18px
+      );
+      transform: translateX(-50%) rotate(1.8deg);
+    }
+
+    .pin-card:nth-child(3n) .washi-tape {
+      background:
+        radial-gradient(rgba(52, 211, 153, 0.55) 2.5px, transparent 2.5px),
+        rgba(236, 253, 245, 0.85);
+      background-size: 10px 10px;
+      transform: translateX(-50%) rotate(-1.2deg);
+    }
+
+    /* Cute Corner Sticker Badge */
+    .corner-sticker {
+      position: absolute;
+      top: -11px;
+      right: 12px;
+      font-size: 1.5rem;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.14));
+      transform: rotate(10deg);
+      z-index: 5;
+      pointer-events: none;
+      user-select: none;
+      display: none;
+    }
+
+    .scrapbook-flower-badge {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+      font-size: 1.25rem;
+      opacity: 0.75;
+      pointer-events: none;
+      display: none;
+    }
+
+    /* Media Frame */
+    .media-frame {
+      margin-bottom: 12px;
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    /* STYLE 1: Washi Tape & Stickers (style-washi) */
+    .pin-card.style-washi .washi-tape,
+    .pin-card.style-washi .corner-sticker {
+      display: block;
+    }
+
+    /* STYLE 2: Polaroid Frame (style-polaroid) */
+    .pin-card.style-polaroid {
+      background: #ffffff !important;
+      color: #2c3e50 !important;
+      border-radius: 10px;
+      padding: 14px 14px 28px 14px;
+      border: 1px solid #dce4ec;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.08);
+      transform: rotate(-1.1deg);
+    }
+    .pin-card.style-polaroid:nth-child(even) {
+      transform: rotate(1.15deg);
+    }
+    .pin-card.style-polaroid:hover {
+      transform: rotate(0deg) translateY(-5px) scale(1.01);
+    }
+    .pin-card.style-polaroid .washi-tape {
+      display: block;
+      width: 78px;
+      height: 22px;
+      top: -10px;
+    }
+    .pin-card.style-polaroid .media-frame {
+      background: #f8fafc;
+      padding: 6px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+    .pin-card.style-polaroid .pin-title,
+    .pin-card.style-polaroid .pin-content {
+      color: #1e293b !important;
+    }
+
+    /* STYLE 3: Pressed Flower Scrapbook (style-scrapbook) */
+    .pin-card.style-scrapbook {
+      background-color: #fffdf7 !important;
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 27px,
+        rgba(148, 163, 184, 0.22) 27px,
+        rgba(148, 163, 184, 0.22) 28px
+      ) !important;
+      color: #334155 !important;
+      border: 2px dashed #cbd5e1;
+      border-radius: 18px;
+      box-shadow:
+        inset 0 0 0 4px #fffdf7,
+        0 10px 24px rgba(100, 116, 139, 0.15);
+    }
+    .pin-card.style-scrapbook .washi-tape,
+    .pin-card.style-scrapbook .corner-sticker,
+    .pin-card.style-scrapbook .scrapbook-flower-badge {
+      display: block;
+    }
+    .pin-card.style-scrapbook .pin-title,
+    .pin-card.style-scrapbook .pin-content {
+      color: #334155 !important;
+    }
+    .pin-card.style-scrapbook .media-frame {
+      border-radius: 12px;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    /* STYLE 4: Classic Clean (style-clean) */
+    .pin-card.style-clean .washi-tape,
+    .pin-card.style-clean .corner-sticker,
+    .pin-card.style-clean .scrapbook-flower-badge {
+      display: none;
+    }
+
+    .pin-image {
+      width: 100%;
+      border-radius: 12px;
+      display: block;
+      object-fit: cover;
+      background: #f0f7ff;
+      min-height: 60px;
+    }
+
+    .pin-embed {
+      width: 100%;
+      height: 340px;
+      border: none;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .pin-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mood-tag {
+      background: var(--soft-blue);
+      color: var(--accent-blue);
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .pin-title {
+      font-size: 1.18rem;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .pin-content {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-dark);
+      opacity: 0.9;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 230px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .pin-content.has-overflow::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: linear-gradient(transparent, var(--card-bg));
+      pointer-events: none;
+    }
+
+    /* Checklist */
+    .task-list {
+      list-style: none;
+      margin-top: 6px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.93rem;
+      cursor: pointer;
+    }
+
+    .task-item.readonly-task {
+      cursor: default;
+    }
+
+    .task-item:last-child {
+      border-bottom: none;
+    }
+
+    .task-item input[type="checkbox"] {
+      accent-color: var(--accent-blue);
+      width: 17px;
+      height: 17px;
+      margin-top: 3px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .task-item input[type="checkbox"]:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .task-item.done span {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .pin-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+      flex-wrap: wrap;
+    }
+
+    .icon-btn {
+      background: var(--soft-blue);
+      border: none;
+      color: var(--accent-blue);
+      padding: 6px 12px;
+      border-radius: 14px;
+      font-family: var(--main-font);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .icon-btn:hover {
+      background: #c3e0ff;
+      transform: translateY(-1px);
+    }
+
+    .icon-btn.read-btn {
+      background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .icon-btn.read-btn:hover {
+      background: linear-gradient(135deg, #bae6fd, #bfdbfe);
+    }
+
+    .icon-btn.delete:hover {
+      background: #ffe3e3;
+      color: #e03131;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    /* Floating Timer & Stopwatch Panel */
+    .clock-widget {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 340px;
+      max-width: calc(100vw - 32px);
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 26px;
+      padding: 20px;
+      box-shadow: 0 18px 45px rgba(44, 62, 80, 0.25);
+      z-index: 180;
+      display: none;
+      animation: popIn 0.25s ease-out;
+    }
+
+    .clock-widget.active {
+      display: block;
+    }
+
+    .clock-display {
+      font-family: 'Comfortaa', monospace;
+      font-size: 2.25rem;
+      font-weight: 700;
+      text-align: center;
+      color: var(--accent-blue);
+      background: var(--input-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: 18px;
+      padding: 14px 10px;
+      margin: 12px 0;
+      letter-spacing: 1px;
+    }
+
+    .preset-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .preset-btn {
+      background: var(--soft-blue);
+      color: var(--accent-blue);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-family: var(--main-font);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .custom-time-inputs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .custom-time-inputs input {
+      width: 72px;
+      padding: 7px 10px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-color);
+      background: var(--input-bg);
+      color: var(--text-dark);
+      font-family: 'Comfortaa', sans-serif;
+      text-align: center;
+      font-size: 0.88rem;
+    }
+
+    .clock-controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .lap-list {
+      max-height: 110px;
+      overflow-y: auto;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-color);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      list-style: none;
+    }
+
+    .lap-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 6px;
+    }
+
+    /* Modal & Custom Dialog Overlays */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 62, 80, 0.35);
+      backdrop-filter: blur(5px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 18px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--card-bg);
+      color: var(--text-dark);
+      width: 100%;
+      max-width: 520px;
+      border-radius: 26px;
+      padding: 26px;
+      box-shadow: 0 20px 45px rgba(74, 137, 220, 0.25);
+      border: 2px solid var(--border-color);
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    .dialog-box {
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .dialog-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      font-family: 'Pacifico', cursive;
+      font-weight: 400;
+      color: var(--accent-blue);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .type-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      background: var(--input-bg);
+      padding: 5px;
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .type-tab {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 12px;
+      background: transparent;
+      font-family: var(--main-font);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .type-tab.active {
+      background: var(--card-bg);
+      color: var(--accent-blue);
+      box-shadow: 0 2px 8px rgba(74, 137, 220, 0.15);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border-color);
+      font-family: var(--main-font);
+      font-size: 0.93rem;
+      outline: none;
+      background: var(--input-bg);
+      color: var(--text-dark);
+    }
+
+    .decor-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .decor-check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: var(--input-bg);
+      padding: 7px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+
+    textarea.form-control {
+      min-height: 115px;
+      resize: vertical;
+    }
+
+    .pin-status {
+      font-size: 0.82rem;
+      color: var(--accent-blue);
+      margin-top: 6px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .image-upload-box {
+      border: 2px dashed #a3cef7;
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+      background: #f4f9ff;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-top: 8px;
+    }
+
+    .image-preview-wrapper {
+      margin-top: 10px;
+      position: relative;
+      display: none;
+    }
+
+    .image-preview-wrapper img {
+      width: 100%;
+      max-height: 210px;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .remove-img-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #e03131;
+    }
+
+    /* Unsent Letters Styles */
+    .letter-card {
+      background: var(--input-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(74, 137, 220, 0.08);
+      text-align: left;
+    }
+    .letter-to {
+      font-family: var(--main-font);
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    .letter-msg {
+      font-family: 'Comfortaa', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    /* Gift & Animation Styles */
+    .gift-container {
+      cursor: pointer;
+      font-size: 6rem;
+      transition: transform 0.2s;
+      position: relative;
+      z-index: 10;
+      user-select: none;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+    }
+    .gift-container:hover {
+      transform: scale(1.1) rotate(3deg);
+    }
+    .gift-container.opened {
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .gift-gerbera {
+      position: absolute;
+      bottom: 40px;
+      transform: scale(0);
+      opacity: 0;
+      z-index: 5;
+      transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    }
+    .gift-gerbera.pop.red {
+      transform: translate(-70px, -60px) scale(1.1) rotate(-20deg);
+      opacity: 1;
+    }
+    .gift-gerbera.pop.orange {
+      transform: translate(0px, -100px) scale(1.3);
+      opacity: 1;
+      z-index: 6;
+    }
+    .gift-gerbera.pop.yellow {
+      transform: translate(70px, -60px) scale(1.1) rotate(20deg);
+      opacity: 1;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #ff4d4d;
+      transform: rotate(45deg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .confetti-piece::before, .confetti-piece::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: inherit;
+      border-radius: 50%;
+    }
+    .confetti-piece::before { left: -6px; top: 0; }
+    .confetti-piece::after { left: 0; top: -6px; }
+
+    .pop-confetti {
+      animation: burst 1.2s ease-out forwards;
+    }
+    @keyframes burst {
+      0% { transform: rotate(45deg) translate(0,0) scale(0.5); opacity: 1; }
+      100% { transform: rotate(45deg) translate(var(--tx), var(--ty)) scale(1.5); opacity: 0; }
+    }
+
+    /* Dedicated Read Modal Styling */
+    .read-modal-card {
+      max-width: 620px !important;
+      padding: 30px !important;
+    }
+    .read-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .read-modal-title {
+      font-family: 'Pacifico', cursive;
+      color: var(--accent-blue);
+      font-size: 1.85rem;
+      font-weight: 400;
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+    .read-modal-media {
+      margin-bottom: 18px;
+      border-radius: 16px;
+      overflow: hidden;
+      max-height: 380px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      background: #f8fbff;
+    }
+    .read-modal-media img {
+      width: 100%;
+      max-height: 380px;
+      object-fit: contain;
+      display: block;
+    }
+    .read-modal-media iframe {
+      width: 100%;
+      height: 380px;
+      border: none;
+      display: block;
+    }
+    .read-modal-text {
+      font-family: var(--main-font);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-dark);
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 50vh;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+  </style>
+</head>
+<body data-theme="pastel" data-margin-theme="botanical" data-card-style="washi">
+
+  <!-- Cute Botanical Leaves & Flowers Background Layer -->
+  <div class="botanical-layer" aria-hidden="true">
+    <svg class="bg-vine-corner top-left" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 170 C40 130, 65 80, 165 15" stroke="#86efac" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M0 110 C45 95, 90 50, 125 0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M40 132 C25 118, 35 100, 55 115 C48 128, 40 132, 40 132 Z" fill="#a7f3d0"/>
+      <path d="M75 95 C92 108, 108 92, 90 78 C80 86, 75 95, 75 95 Z" fill="#86efac"/>
+      <path d="M112 58 C98 42, 112 26, 128 42 C120 52, 112 58, 112 58 Z" fill="#a7f3d0"/>
+      <circle cx="85" cy="68" r="7" fill="#fbcfe8"/>
+      <circle cx="85" cy="68" r="3" fill="#fef08a"/>
+      <circle cx="138" cy="30" r="6.5" fill="#fbcfe8"/>
+      <circle cx="138" cy="30" r="2.5" fill="#fde68a"/>
+    </svg>
+
+    <svg class="bg-vine-corner bottom-right" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 170 C40 130, 65 80, 165 15" stroke="#86efac" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <path d="M0 110 C45 95, 90 50, 125 0" stroke="#93c5fd" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M40 132 C25 118, 35 100, 55 115 C48 128, 40 132, 40 132 Z" fill="#a7f3d0"/>
+      <path d="M75 95 C92 108, 108 92, 90 78 C80 86, 75 95, 75 95 Z" fill="#86efac"/>
+      <path d="M112 58 C98 42, 112 26, 128 42 C120 52, 112 58, 112 58 Z" fill="#a7f3d0"/>
+      <circle cx="85" cy="68" r="7" fill="#fbcfe8"/>
+      <circle cx="85" cy="68" r="3" fill="#fef08a"/>
+      <circle cx="138" cy="30" r="6.5" fill="#bfdbfe"/>
+      <circle cx="138" cy="30" r="2.5" fill="#fde68a"/>
+    </svg>
+
+    <span class="bg-botanical-item" style="top: 15%; left: 3%; font-size: 1.5rem; animation-delay: 0s;">🌿</span>
+    <span class="bg-botanical-item" style="top: 22%; left: 94%; font-size: 1.45rem; animation-delay: 1.4s;">🌸</span>
+    <span class="bg-botanical-item" style="top: 38%; left: 6%; font-size: 1.35rem; animation-delay: 2.2s;">🌼</span>
+    <span class="bg-botanical-item" style="top: 48%; left: 92%; font-size: 1.5rem; animation-delay: 0.8s;">🍃</span>
+    <span class="bg-botanical-item" style="top: 64%; left: 4%; font-size: 1.45rem; animation-delay: 3.1s;">🌷</span>
+    <span class="bg-botanical-item" style="top: 76%; left: 95%; font-size: 1.4rem; animation-delay: 1.9s;">🌿</span>
+    <span class="bg-botanical-item" style="top: 88%; left: 8%; font-size: 1.35rem; animation-delay: 2.7s;">🌸</span>
+    <span class="bg-botanical-item" style="top: 10%; left: 52%; font-size: 1.25rem; animation-delay: 1.1s;">🍃</span>
+    <span class="bg-botanical-item" style="top: 91%; left: 62%; font-size: 1.35rem; animation-delay: 0.4s;">🌼</span>
+  </div>
+
+  <div class="primogem-layer" aria-hidden="true">
+    <span class="primogem-star" style="top: 12%; left: 7%; animation-delay: 0s;">✦</span>
+    <span class="primogem-star" style="top: 26%; left: 88%; animation-delay: 1.2s;">✧</span>
+    <span class="primogem-star" style="top: 55%; left: 14%; animation-delay: 2.5s;">✦</span>
+    <span class="primogem-star" style="top: 72%; left: 82%; animation-delay: 0.7s;">✦</span>
+    <span class="primogem-star" style="top: 40%; left: 48%; animation-delay: 3.1s;">✧</span>
+    <span class="primogem-star" style="top: 85%; left: 32%; animation-delay: 1.9s;">✦</span>
+  </div>
+
+  <!-- Intermediate Welcome / Loading Screen -->
+  <div id="welcomeScreen" class="welcome-screen hidden">
+    <div class="welcome-spinner"></div>
+    <h2 id="welcomeText" class="welcome-text">Opening Tayeba's Diary... ☁️💙</h2>
+  </div>
+
+  <!-- Interactive Multi-Step Security Lock Screen -->
+  <div id="lockScreen" class="lock-screen">
+    <div class="lock-card">
+      <h1>Tayeba's Diary ☁️</h1>
+
+      <!-- STEP 1: Initial Passcode Entry -->
+      <div id="lockStep1" class="lock-step active">
+        <p>Enter your secret word to open your diary 💙</p>
+        <input
+          type="password"
+          id="passcodeInput"
+          class="lock-input"
+          placeholder="Type secret word..."
+          onkeydown="if(event.key === 'Enter') handleInitialPasscode()"
+        />
+        <div id="step1Error" class="lock-error">Please enter a password first! 🧁</div>
+        <button type="button" class="unlock-btn" onclick="handleInitialPasscode()">Unlock Diary 🗝️</button>
+      </div>
+
+      <!-- STEP 2: First Question (Why are you trying to enter?) -->
+      <div id="lockStep2" class="lock-step">
+        <p>Oops! That password is incorrect. Why are you trying to enter Tayeba's website?</p>
+        <div class="choice-group">
+          <button type="button" class="choice-btn" onclick="goToLockStep(3)">1. She knows me.</button>
+          <button type="button" class="choice-btn leave-choice" onclick="leaveWebsite('Goodbye! You have left Tayeba\'s Diary. ☁️')">2. Leave.</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Second Question (Who are you?) -->
+      <div id="lockStep3" class="lock-step">
+        <p>Who are you?</p>
+        <input
+          type="text"
+          id="visitorNameInput"
+          class="lock-input"
+          placeholder="Enter your name."
+          onkeydown="if(event.key === 'Enter') verifyVisitorName()"
+        />
+        <div id="step3Error" class="lock-error">Please enter your name! 💙</div>
+        <button type="button" class="unlock-btn" onclick="verifyVisitorName()">Submit 💙</button>
+      </div>
+
+      <!-- STEP 4: Sadat's Unlimited Password Guess Mode with Teyvat Hint -->
+      <div id="lockStep4" class="lock-step">
+        <p>Welcome, Sadat! Guess Tayeba's secret password:</p>
+        <input
+          type="password"
+          id="sadatPasscodeInput"
+          class="lock-input"
+          placeholder="Enter your password guess..."
+          onkeydown="if(event.key === 'Enter') checkSadatGuess()"
+        />
+        <div id="sadatHintBox" class="lock-hint-box">
+          Try again! Hint: The password is hidden in Teyvat. ✨
+        </div>
+        <button type="button" class="unlock-btn" onclick="checkSadatGuess()">Unlock Diary 🗝️</button>
+      </div>
+
+      <!-- STEP 5: Leave / Unauthorized Screen -->
+      <div id="lockStep5" class="lock-step">
+        <p id="leaveMessageText">Sorry, you don't have permission. Please leave the website. 🚪</p>
+        <button type="button" class="choice-btn leave-choice" onclick="exitPageNow()">Leave Website 👋</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <h1>Tayeba's Diary ☁️ <span class="title-decor">🎀✨</span></h1>
+      <span>my safe space 💙</span>
+      <span id="guestModeBadge" class="guest-badge">👀 Guest Mode (Read-Only)</span>
+      <span id="cloudSyncBadge" class="guest-badge" style="background: rgba(92, 156, 230, 0.12); color: var(--accent-blue); border-color: rgba(92, 156, 230, 0.3); font-size: 0.72rem;">☁️ Cloud Synced</span>
+    </div>
+    <div class="header-actions">
+      <input type="text" id="searchInput" class="search-box" placeholder="Search memories..." oninput="renderPins()" />
+      <select id="themeSelector" class="font-select" onchange="changeTheme(this.value)" title="Choose Teyvat Theme">
+        <option value="pastel">💧 Fontaine Water</option>
+        <option value="mondstadt">🌌 Mondstadt Starlit Night</option>
+        <option value="liyue">🏮 Liyue Lantern Glow</option>
+        <option value="inazuma">🌸 Inazuma Sakura</option>
+      </select>
+      <select id="fontSelector" class="font-select" onchange="changeFont(this.value)" title="Choose Font">
+        <option value="'Mali', cursive">✨ Cute Handwriting</option>
+        <option value="'Caveat', cursive">🖊️ Curly Diary Script</option>
+        <option value="'Comfortaa', sans-serif">☁️ Soft Rounded</option>
+        <option value="'Patrick Hand', cursive">📒 Neat Journal Print</option>
+        <option value="'Indie Flower', cursive">🌼 Daisy Sketch</option>
+        <option value="'Shadows Into Light', cursive">✨ Airy Whisper</option>
+        <option value="'Quicksand', sans-serif">🫧 Modern Aesthetic</option>
+        <option value="'Dancing Script', cursive">🎀 Elegant Cursive</option>
+      </select>
+
+      <button type="button" class="btn-soft" onclick="openLettersModal()">💌 Letters</button>
+      <button type="button" class="btn-soft" onclick="toggleClockWidget()">⏱️ Timer & Stopwatch</button>
+      <button type="button" id="newNoteBtn" class="btn-primary" onclick="openModal('note')">+ New Note</button>
+      <button type="button" id="newPlanBtn" class="btn-primary" style="background: linear-gradient(135deg, #8ec5fc, #5c9ce6);" onclick="openModal('plan')">☑️ New Plan</button>
+      <button type="button" class="btn-soft" onclick="lockDiary()" title="Lock Diary">🔒 Lock</button>
+    </div>
+  </header>
+
+  <!-- Sadat's Automatic Special Welcome Banner -->
+  <div id="sadatWelcomeBanner" class="sadat-welcome-banner">
+    <div class="sadat-banner-inner">
+      <div class="sadat-banner-text">
+        <h2>✨ Special Guest Unlocked ✨</h2>
+        <p>"Hey, sacchan! welcome to my diary. A long way!"</p>
+      </div>
+      <!-- Gift Box Button exclusively for Sadat -->
+      <button id="sadatGiftBtn" class="btn-primary" style="margin-left:auto; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #e63946; border: 2px solid #ffb6b9;" onclick="openGiftModal()">Open Gift 🎁</button>
+      <span class="sadat-banner-pill">☁️ Read-Only Visitor Pass 💙</span>
+    </div>
+  </div>
+
+  <!-- Layout, Pinterest Decorative Margin Themes & Card Style Controls -->
+  <div class="board-controls-bar">
+    <div class="control-cluster">
+      <span class="control-label">📐 Layout:</span>
+      <button type="button" class="mini-pill active" id="layoutMasonryBtn" onclick="setBoardLayout('masonry', this)">4-Col Masonry</button>
+      <button type="button" class="mini-pill" id="layoutCozyBtn" onclick="setBoardLayout('cozy', this)">2-Col Cozy Wide</button>
+      <button type="button" class="mini-pill" id="layoutJournalBtn" onclick="setBoardLayout('journal', this)">1-Col Journal</button>
+    </div>
+
+    <div class="control-cluster">
+      <span class="control-label">🌸 Margin Design:</span>
+      <select id="marginThemeSelect" class="font-select" style="padding: 5px 12px; font-size: 0.8rem;" onchange="setMarginTheme(this.value)">
+        <option value="botanical">🌿 Botanical Vine & Blossoms</option>
+        <option value="coquette">🎀 Coquette Lace & Ribbon</option>
+        <option value="gingham">📓 Checkered Gingham Washi</option>
+        <option value="celestial">✨ Teyvat Celestial Arch</option>
+        <option value="cloud">☁️ Minimal Cozy Cloud</option>
+      </select>
+    </div>
+
+    <div class="control-cluster">
+      <span class="control-label">🎀 Card Style:</span>
+      <select id="cardStyleSelect" class="font-select" style="padding: 5px 12px; font-size: 0.8rem;" onchange="setCardStyle(this.value)">
+        <option value="washi">🩹 Washi Tape & Stickers</option>
+        <option value="polaroid">📸 Polaroid Photo Frame</option>
+        <option value="scrapbook">🌼 Pressed Flower Scrapbook</option>
+        <option value="clean">☁️ Classic Clean Card</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Emotion Filter Pills -->
+  <div class="filter-bar">
+    <button class="filter-pill active" onclick="setFilter('ALL', this)">✨ All Pins</button>
+    <button class="filter-pill" onclick="setFilter('PLAN', this)">☑️ Tasks & Plans</button>
+    <button class="filter-pill" onclick="setFilter('😊 Happy', this)">😊 Happy</button>
+    <button class="filter-pill" onclick="setFilter('🤩 Overjoyed', this)">🤩 Overjoyed</button>
+    <button class="filter-pill" onclick="setFilter('😐 Neutral', this)">😐 Neutral</button>
+    <button class="filter-pill" onclick="setFilter('😢 Sad', this)">😢 Sad</button>
+    <button class="filter-pill" onclick="setFilter('😴 Tired', this)">😴 Tired</button>
+    <button class="filter-pill" onclick="setFilter('😌 Peaceful', this)">😌 Peaceful</button>
+    <button class="filter-pill" onclick="setFilter('🦋 Excited', this)">🦋 Excited</button>
+    <button class="filter-pill" onclick="setFilter('🥺 Anxious', this)">🥺 Anxious</button>
+    <button class="filter-pill" onclick="setFilter('😤 Frustrated', this)">😤 Frustrated</button>
+    <button class="filter-pill" onclick="setFilter('💙 Grateful', this)">💙 Grateful</button>
+    <button class="filter-pill" onclick="setFilter('🥱 Bored', this)">🥱 Bored</button>
+    <button class="filter-pill" onclick="setFilter('🌷 Nostalgic', this)">🌷 Nostalgic</button>
+  </div>
+
+  <!-- Main Pinterest Decorative Margin Frame & Masonry Diary -->
+  <div id="diaryFrameWrapper" class="diary-frame-wrapper">
+    <span id="cornerTL" class="frame-corner-decor tl">🌿🌸</span>
+    <span id="cornerTR" class="frame-corner-decor tr">🌸🌿</span>
+    <span id="cornerBL" class="frame-corner-decor bl">🌿🌼</span>
+    <span id="cornerBR" class="frame-corner-decor br">🌼🌿</span>
+
+    <div class="container">
+      <div id="emptyState" class="empty-state">
+        <h2>No pins here yet ✨</h2>
+        <p>Click "+ New Note" or "☑️ New Plan" to pin your thoughts or Pinterest photos!</p>
+      </div>
+      <div id="masonryGrid" class="masonry-grid"></div>
+    </div>
+  </div>
+
+  <!-- Timer & Stopwatch Floating Widget -->
+  <div id="clockWidget" class="clock-widget">
+    <div class="modal-header" style="margin-bottom: 10px;">
+      <h2 style="font-size: 1.35rem;">Time Companion ⏱️</h2>
+      <button type="button" class="close-btn" onclick="toggleClockWidget()">&times;</button>
+    </div>
+
+    <div class="type-tabs" style="margin-bottom: 12px;">
+      <button type="button" class="type-tab active" id="tabTimerMode" onclick="switchClockTab('timer')">⏳ Timer</button>
+      <button type="button" class="type-tab" id="tabStopwatchMode" onclick="switchClockTab('stopwatch')">⏱️ Stopwatch</button>
+    </div>
+
+    <!-- TIMER PANEL -->
+    <div id="timerPanel">
+      <div class="preset-row">
+        <button type="button" class="preset-btn" onclick="setTimerPreset(5)">5m</button>
+        <button type="button" class="preset-btn" onclick="setTimerPreset(15)">15m</button>
+        <button type="button" class="preset-btn" onclick="setTimerPreset(25)">25m Pomodoro</button>
+        <button type="button" class="preset-btn" onclick="setTimerPreset(45)">45m</button>
+      </div>
+      <div class="custom-time-inputs">
+        <input type="number" id="customMinInput" min="0" max="999" placeholder="Min" value="25" onchange="applyCustomTimerInput()" />
+        <span>:</span>
+        <input type="number" id="customSecInput" min="0" max="59" placeholder="Sec" value="0" onchange="applyCustomTimerInput()" />
+      </div>
+      <div id="timerDisplay" class="clock-display">25:00</div>
+      <div class="clock-controls">
+        <button type="button" class="btn-primary" id="timerStartBtn" onclick="startTimer()">Start</button>
+        <button type="button" class="btn-soft" onclick="pauseTimer()">Pause</button>
+        <button type="button" class="btn-soft" onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+
+    <!-- STOPWATCH PANEL -->
+    <div id="stopwatchPanel" style="display: none;">
+      <div id="stopwatchDisplay" class="clock-display" style="font-size: 1.85rem;">00:00:00.0</div>
+      <div class="clock-controls">
+        <button type="button" class="btn-primary" id="swStartBtn" onclick="startStopwatch()">Start</button>
+        <button type="button" class="btn-soft" onclick="pauseStopwatch()">Pause</button>
+        <button type="button" class="btn-soft" onclick="lapStopwatch()">Lap</button>
+        <button type="button" class="btn-soft" onclick="resetStopwatch()">Reset</button>
+      </div>
+      <ul id="stopwatchLaps" class="lap-list"></ul>
+    </div>
+  </div>
+
+  <!-- Dedicated Read Note Modal (For visitors and creator) -->
+  <div id="readModal" class="modal-overlay">
+    <div class="modal read-modal-card">
+      <div class="read-modal-header">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <span id="readMood" class="mood-tag">😊 Happy</span>
+          <span id="readDate" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;"></span>
+        </div>
+        <button type="button" class="close-btn" onclick="closeReadModal()">&times;</button>
+      </div>
+      
+      <h2 id="readTitle" class="read-modal-title"></h2>
+
+      <div id="readMediaWrapper" class="read-modal-media" style="display: none;"></div>
+
+      <div id="readContent" class="read-modal-text"></div>
+
+      <div style="margin-top: 22px; display: flex; justify-content: flex-end;">
+        <button type="button" class="btn-primary" onclick="closeReadModal()">Close ☁️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unsent Letters Feature Modal -->
+  <div id="lettersModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 style="font-size: 1.5rem;">The Unsent Letters 💌</h2>
+        <button type="button" class="close-btn" onclick="closeLettersModal()">&times;</button>
+      </div>
+
+      <div class="type-tabs" style="margin-bottom: 16px;">
+        <button type="button" class="type-tab active" id="tabSearchLetters" onclick="switchLetterTab('search')">🔍 Read Letters</button>
+        <button type="button" class="type-tab" id="tabWriteLetter" onclick="switchLetterTab('write')">✍️ Write a Letter</button>
+      </div>
+
+      <!-- Search View -->
+      <div id="lettersSearchBox">
+        <input type="text" id="letterSearchInput" class="form-control" placeholder="Search a nickname (e.g. sacchan)..." oninput="searchLetters()" />
+        <div id="letterResults" style="margin-top: 15px; max-height: 350px; overflow-y: auto;">
+          <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">Type a nickname to see if someone left a letter for them ☁️</p>
+        </div>
+      </div>
+
+      <!-- Write View -->
+      <div id="lettersWriteBox" style="display: none;">
+        <div class="form-group">
+          <label>To (Nickname):</label>
+          <input type="text" id="newLetterTo" class="form-control" placeholder="Who is this for?" />
+        </div>
+        <div class="form-group">
+          <label>Your Message:</label>
+          <textarea id="newLetterMsg" class="form-control" placeholder="Type your letter..." style="min-height: 140px;"></textarea>
+        </div>
+        <button type="button" class="btn-primary" style="width: 100%;" onclick="saveLetter()">Send into the void ☁️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sadat's Special Gift Box Modal -->
+  <div id="giftModal" class="modal-overlay">
+    <div class="modal dialog-box" style="text-align: center; min-height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+      <div class="modal-header" style="width: 100%; position: absolute; top: 20px;">
+        <button type="button" class="close-btn" style="margin-left: auto;" onclick="closeGiftModal()">&times;</button>
+      </div>
+      
+      <h2 id="giftTitle" style="font-family: 'Pacifico', cursive; color: var(--accent-blue); margin-bottom: 20px;">A Special Gift For You 🎁</h2>
+      
+      <div id="giftWrapper" style="position: relative; width: 100%; height: 220px; display: flex; justify-content: center; align-items: flex-end;">
+        
+        <!-- Red Gerbera -->
+        <svg id="gerberaRed" class="gift-gerbera red" width="100" height="100" viewBox="0 0 100 100">
+          <g fill="#ff4d4d">
+            <ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(0 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(15 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(30 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(45 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(75 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(90 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(105 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(120 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(135 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(150 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(165 50 50)"/>
+          </g>
+          <circle cx="50" cy="50" r="16" fill="#333"/><circle cx="50" cy="50" r="10" fill="#ffcc00" stroke="#555" stroke-dasharray="2 3"/>
+        </svg>
+
+        <!-- Orange Gerbera -->
+        <svg id="gerberaOrange" class="gift-gerbera orange" width="110" height="110" viewBox="0 0 100 100">
+          <g fill="#ffa64d">
+            <ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(0 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(15 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(30 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(45 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(75 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(90 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(105 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(120 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(135 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(150 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(165 50 50)"/>
+          </g>
+          <circle cx="50" cy="50" r="16" fill="#333"/><circle cx="50" cy="50" r="10" fill="#ffe066" stroke="#555" stroke-dasharray="2 3"/>
+        </svg>
+
+        <!-- Yellow Gerbera -->
+        <svg id="gerberaYellow" class="gift-gerbera yellow" width="100" height="100" viewBox="0 0 100 100">
+          <g fill="#ffd24d">
+            <ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(0 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(15 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(30 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(45 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(75 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(90 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(105 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(120 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(135 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(150 50 50)"/><ellipse cx="50" cy="50" rx="45" ry="7" transform="rotate(165 50 50)"/>
+          </g>
+          <circle cx="50" cy="50" r="16" fill="#664400"/><circle cx="50" cy="50" r="10" fill="#fff5cc" stroke="#332200" stroke-dasharray="2 3"/>
+        </svg>
+        
+        <div id="theGift" class="gift-container" onclick="triggerGiftAnimation()">🎁</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Modal -->
+  <div id="noteModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">New Diary Pin 🦋</h2>
+        <button type="button" class="close-btn" onclick="closeModal()">&times;</button>
+      </div>
+
+      <div class="type-tabs">
+        <button type="button" class="type-tab active" id="tabNote" onclick="switchEntryType('note')">📝 Diary Note</button>
+        <button type="button" class="type-tab" id="tabPlan" onclick="switchEntryType('plan')">☑️ Task / Plan List</button>
+      </div>
+
+      <input type="hidden" id="editId" />
+      <input type="hidden" id="entryType" value="note" />
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="noteTitle" class="form-control" placeholder="Give your memory or plan a title..." />
+      </div>
+
+      <div class="form-group">
+        <label>Current Emotion / Mood</label>
+        <select id="noteMood" class="form-control">
+          <option value="😊 Happy">😊 Happy</option>
+          <option value="🤩 Overjoyed">🤩 Overjoyed</option>
+          <option value="😐 Neutral">😐 Neutral</option>
+          <option value="😢 Sad">😢 Sad</option>
+          <option value="😴 Tired">😴 Tired</option>
+          <option value="😌 Peaceful">😌 Peaceful</option>
+          <option value="🦋 Excited">🦋 Excited</option>
+          <option value="🥺 Anxious">🥺 Anxious</option>
+          <option value="😤 Frustrated">😤 Frustrated</option>
+          <option value="💙 Grateful">💙 Grateful</option>
+          <option value="🥱 Bored">🥱 Bored</option>
+          <option value="🌷 Nostalgic">🌷 Nostalgic</option>
+          <option value="🗓️ Daily Plan">🗓️ Daily Plan</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Corner Sticker & Card Decorations</label>
+        <div class="decor-row">
+          <select id="noteSticker" class="form-control" style="width: auto; flex: 1;">
+            <option value="☁️">☁️ Cloud Sticker</option>
+            <option value="💙">💙 Blue Heart</option>
+            <option value="✨">✨ Primogem Sparkle</option>
+            <option value="🦋">🦋 Crystalfly</option>
+            <option value="🌷">🌷 Windwheel Aster</option>
+            <option value="">🚫 No Sticker</option>
+          </select>
+          <label class="decor-check">
+            <input type="checkbox" id="noteWashiCheck" checked /> 🩹 Washi Tape
+          </label>
+          <label class="decor-check">
+            <input type="checkbox" id="notePolaroidCheck" checked /> 📸 Polaroid
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Pin an Image (Paste ANY Pinterest Link or Upload)</label>
+        <input type="url" id="imageUrlInput" class="form-control" placeholder="📌 Paste any Pinterest link (pin.it, pinterest.com, or image link)..." oninput="handleImageUrl(this.value)" />
+        <div id="pinStatus" class="pin-status">⏳ Grabbing photo from Pinterest...</div>
+        <div class="image-upload-box" onclick="document.getElementById('imageInput').click()">
+          📷 Or click to upload a photo from your device
+          <input type="file" id="imageInput" accept="image/*" style="display: none" onchange="handleImageUpload(event)" />
+        </div>
+        <div id="previewWrapper" class="image-preview-wrapper">
+          <img id="imagePreview" src="" alt="Preview" referrerpolicy="no-referrer" />
+          <button type="button" class="remove-img-btn" onclick="removeSelectedImage()">&times;</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label id="contentLabel">Write your heart out</label>
+        <textarea id="noteContent" class="form-control" placeholder="Dear diary..."></textarea>
+      </div>
+
+      <button type="button" class="btn-primary" id="saveBtn" style="width: 100%;" onclick="saveNote()">Save to Diary 💙</button>
+    </div>
+  </div>
+
+  <!-- Custom Message / Confirmation Dialog -->
+  <div id="customDialogModal" class="modal-overlay" style="z-index: 10000;">
+    <div class="modal dialog-box">
+      <h2 id="dialogTitle" style="font-family: 'Pacifico', cursive; color: var(--accent-blue); font-weight: 400; margin-bottom: 10px;">Notice 💙</h2>
+      <p id="dialogMessage" style="color: var(--text-dark); font-size: 0.96rem; line-height: 1.5;"></p>
+      <div class="dialog-actions" id="dialogActions"></div>
+    </div>
+  </div>
+
+  <script>
+    // Secret Passcodes:
+    // "snowie" unlocks Creator Page (Tayeba full edit access)
+    // "cupcake" unlocks Visitor Page (Sadat read-only guest access)
+    const CREATOR_SECRET_CODE = "snowie";
+    const VISITOR_SECRET_CODE = "cupcake";
+
+    // Firebase Realtime Database Configuration & Live Sync
+    const firebaseConfig = {
+      apiKey: "AIzaSyDWyMTk8xPvtrck-EgiXnsEkupu-eMViQ0",
+      authDomain: "tayebas-diary.firebaseapp.com",
+      databaseURL: "https://tayebas-diary-default-rtdb.firebaseio.com",
+      projectId: "tayebas-diary",
+      storageBucket: "tayebas-diary.firebasestorage.app",
+      messagingSenderId: "834628167705",
+      appId: "1:834628167705:web:3c370b7e8c880e2198e288"
+    };
+
+    let db = null;
+    let pinsRef = null;
+    let lettersRef = null;
+
+    try {
+      if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        pinsRef = db.ref('tayeba_diary_pins');
+        lettersRef = db.ref('tayeba_diary_letters');
+      }
+    } catch (err) {
+      console.warn("Firebase initialization notice:", err);
+    }
+
+    function normalizeFirebaseArray(data) {
+      if (!data) return [];
+      if (Array.isArray(data)) return data.filter(Boolean);
+      if (typeof data === 'object') return Object.values(data).filter(Boolean);
+      return [];
+    }
+
+    // Read-Only Guest Mode flag for Sadat
+    let isSadatMode = false;
+
+    // Apply Owner vs Sadat Read-Only UI state
+    function applyAccessModeUI() {
+      const sadatBanner = document.getElementById('sadatWelcomeBanner');
+      const guestBadge = document.getElementById('guestModeBadge');
+      const newNoteBtn = document.getElementById('newNoteBtn');
+      const newPlanBtn = document.getElementById('newPlanBtn');
+
+      if (isSadatMode) {
+        sadatBanner.style.display = 'block';
+        guestBadge.style.display = 'inline-block';
+        newNoteBtn.style.display = 'none';
+        newPlanBtn.style.display = 'none';
+      } else {
+        sadatBanner.style.display = 'none';
+        guestBadge.style.display = 'none';
+        newNoteBtn.style.display = 'inline-block';
+        newPlanBtn.style.display = 'inline-block';
+      }
+      renderPins();
+    }
+
+    // Custom non-blocking dialog helper
+    function showNoticeDialog(message, title = "Tayeba's Diary 💙") {
+      const modal = document.getElementById('customDialogModal');
+      document.getElementById('dialogTitle').innerText = title;
+      document.getElementById('dialogMessage').innerText = message;
+      document.getElementById('dialogActions').innerHTML = `
+        <button type="button" class="btn-primary" onclick="closeCustomDialog()">Okay 💙</button>
+      `;
+      modal.classList.add('active');
+    }
+
+    function showConfirmDialog(message, onConfirm) {
+      const modal = document.getElementById('customDialogModal');
+      document.getElementById('dialogTitle').innerText = "Are you sure? 🧁";
+      document.getElementById('dialogMessage').innerText = message;
+      const actions = document.getElementById('dialogActions');
+      actions.innerHTML = '';
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.type = 'button';
+      cancelBtn.className = 'btn-soft';
+      cancelBtn.innerText = 'Cancel';
+      cancelBtn.onclick = closeCustomDialog;
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.type = 'button';
+      confirmBtn.className = 'btn-primary';
+      confirmBtn.style.background = '#e03131';
+      confirmBtn.innerText = 'Delete';
+      confirmBtn.onclick = function() {
+        closeCustomDialog();
+        onConfirm();
+      };
+
+      actions.appendChild(cancelBtn);
+      actions.appendChild(confirmBtn);
+      modal.classList.add('active');
+    }
+
+    function closeCustomDialog() {
+      document.getElementById('customDialogModal').classList.remove('active');
+    }
+
+    // Welcome Screen Controller
+    function showWelcomeScreen(name) {
+      const ws = document.getElementById('welcomeScreen');
+      const wt = document.getElementById('welcomeText');
+      const ls = document.getElementById('lockScreen');
+      
+      ws.classList.remove('hidden');
+      wt.innerText = name.toLowerCase() === 'sadat' ? "Welcome back, Sadat... ☁️💙" : "Opening Tayeba's Diary... ☁️💙";
+      
+      setTimeout(() => {
+        ws.classList.add('hidden');
+        ls.classList.add('hidden');
+      }, 2200); 
+    }
+
+    // Lock Screen Step Controller
+    function goToLockStep(stepNumber) {
+      document.querySelectorAll('.lock-step').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById('lockStep' + stepNumber);
+      if (target) {
+        target.classList.add('active');
+      }
+
+      if (stepNumber === 1) {
+        const input = document.getElementById('passcodeInput');
+        input.value = '';
+        document.getElementById('step1Error').style.display = 'none';
+        setTimeout(() => input.focus(), 50);
+      } else if (stepNumber === 3) {
+        const nameInput = document.getElementById('visitorNameInput');
+        nameInput.value = '';
+        document.getElementById('step3Error').style.display = 'none';
+        setTimeout(() => nameInput.focus(), 50);
+      } else if (stepNumber === 4) {
+        const sadatInput = document.getElementById('sadatPasscodeInput');
+        sadatInput.value = '';
+        document.getElementById('sadatHintBox').style.display = 'none';
+        setTimeout(() => sadatInput.focus(), 50);
+      }
+    }
+
+    // Step 1: Initial passcode check
+    function handleInitialPasscode() {
+      const inputEl = document.getElementById('passcodeInput');
+      const entered = (inputEl.value || '').trim().toLowerCase();
+
+      if (!entered) {
+        document.getElementById('step1Error').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('step1Error').style.display = 'none';
+
+      if (entered === CREATOR_SECRET_CODE) {
+        // Immediate unlock on "snowie" -> Creator Page (Tayeba full edit mode)
+        isSadatMode = false;
+        applyAccessModeUI();
+        showWelcomeScreen('Tayeba');
+        inputEl.value = '';
+      } else if (entered === VISITOR_SECRET_CODE) {
+        // Immediate unlock on "cupcake" -> Visitor Page (Sadat guest mode)
+        isSadatMode = true;
+        applyAccessModeUI();
+        showWelcomeScreen('Sadat');
+        inputEl.value = '';
+      } else {
+        // Wrong password triggers Question 1
+        inputEl.value = '';
+        goToLockStep(2);
+      }
+    }
+
+    // Step 3: Check who the visitor is
+    function verifyVisitorName() {
+      const nameInput = document.getElementById('visitorNameInput');
+      const enteredName = (nameInput.value || '').trim();
+
+      if (!enteredName) {
+        document.getElementById('step3Error').style.display = 'block';
+        return;
+      }
+
+      document.getElementById('step3Error').style.display = 'none';
+
+      if (enteredName.toLowerCase() === 'sadat') {
+        // Sadat gets access to the password guessing screen
+        goToLockStep(4);
+      } else {
+        // Anyone else is asked to leave the website
+        leaveWebsite("Sorry, you don't have permission. Please leave the website. 🚪");
+      }
+    }
+
+    // Step 4: Sadat's unlimited guessing screen with hint
+    function checkSadatGuess() {
+      const sadatInput = document.getElementById('sadatPasscodeInput');
+      const guessed = (sadatInput.value || '').trim().toLowerCase();
+
+      if (guessed === VISITOR_SECRET_CODE) {
+        // Correct guess ("cupcake") -> Unlock in Sadat Read-Only Guest Mode
+        isSadatMode = true;
+        applyAccessModeUI();
+        showWelcomeScreen('Sadat');
+        sadatInput.value = '';
+        document.getElementById('sadatHintBox').style.display = 'none';
+      } else if (guessed === CREATOR_SECRET_CODE) {
+        // If "snowie" is guessed
+        isSadatMode = false;
+        applyAccessModeUI();
+        showWelcomeScreen('Tayeba');
+        sadatInput.value = '';
+        document.getElementById('sadatHintBox').style.display = 'none';
+      } else {
+        // Do not repeat the questions; notify with "Try again!" and the Teyvat hint
+        sadatInput.value = '';
+        const hintBox = document.getElementById('sadatHintBox');
+        hintBox.innerText = "Try again! Hint: The password is hidden in Teyvat. ✨";
+        hintBox.style.display = 'block';
+        sadatInput.focus();
+      }
+    }
+
+    // Step 5: Leave website handler
+    function leaveWebsite(message) {
+      document.getElementById('leaveMessageText').innerText = message;
+      goToLockStep(5);
+    }
+
+    function exitPageNow() {
+      document.body.innerHTML = `
+        <div style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#e3f2fd;font-family:'Comfortaa',sans-serif;text-align:center;padding:24px;color:#2c3e50;">
+          <h1 style="font-family:'Pacifico',cursive;color:#4a89dc;font-size:2.2rem;margin-bottom:12px;">Goodbye! ☁️💙</h1>
+          <p style="font-size:1.05rem;color:#6c8299;">You have left Tayeba's Diary.</p>
+        </div>
+      `;
+    }
+
+    function lockDiary() {
+      isSadatMode = false;
+      applyAccessModeUI();
+      goToLockStep(1);
+      document.getElementById('lockScreen').classList.remove('hidden');
+    }
+
+    // Theme, Font, Layout & Spacing Switchers
+    const savedTheme = localStorage.getItem('tayeba_theme') || 'pastel';
+    document.body.setAttribute('data-theme', savedTheme);
+    document.getElementById('themeSelector').value = savedTheme;
+
+    function changeTheme(themeVal) {
+      document.body.setAttribute('data-theme', themeVal);
+      localStorage.setItem('tayeba_theme', themeVal);
+    }
+
+    const savedFont = localStorage.getItem('tayeba_font') || "'Mali', cursive";
+    document.documentElement.style.setProperty('--main-font', savedFont);
+    document.getElementById('fontSelector').value = savedFont;
+
+    function changeFont(fontVal) {
+      document.documentElement.style.setProperty('--main-font', fontVal);
+      localStorage.setItem('tayeba_font', fontVal);
+    }
+
+    function setBoardLayout(layoutType, btnEl) {
+      const grid = document.getElementById('masonryGrid');
+      grid.classList.remove('layout-cozy', 'layout-journal');
+      if (layoutType === 'cozy') grid.classList.add('layout-cozy');
+      if (layoutType === 'journal') grid.classList.add('layout-journal');
+
+      btnEl.parentElement.querySelectorAll('.mini-pill').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+    }
+
+    const MARGIN_CORNER_ICONS = {
+      botanical: ['🌿🌸', '🌸🌿', '🌿🌼', '🌼🌿'],
+      coquette: ['🎀🌸', '🌸🎀', '🎀🦢', '🦢🎀'],
+      gingham: ['📎💙', '💙📎', '📒✨', '✨📒'],
+      celestial: ['✦🌙', '🌙✦', '✧✨', '✨✧'],
+      cloud: ['☁️💧', '💧☁️', '☁️✨', '✨☁️']
+    };
+
+    let currentMarginTheme = localStorage.getItem('tayeba_margin_theme') || 'botanical';
+    let currentCardStyle = localStorage.getItem('tayeba_card_style') || 'washi';
+
+    function setMarginTheme(themeName) {
+      currentMarginTheme = themeName;
+      document.body.setAttribute('data-margin-theme', themeName);
+      localStorage.setItem('tayeba_margin_theme', themeName);
+      const selectEl = document.getElementById('marginThemeSelect');
+      if (selectEl) selectEl.value = themeName;
+
+      const icons = MARGIN_CORNER_ICONS[themeName] || MARGIN_CORNER_ICONS.botanical;
+      document.getElementById('cornerTL').innerText = icons[0];
+      document.getElementById('cornerTR').innerText = icons[1];
+      document.getElementById('cornerBL').innerText = icons[2];
+      document.getElementById('cornerBR').innerText = icons[3];
+    }
+
+    function setCardStyle(styleName) {
+      currentCardStyle = styleName;
+      document.body.setAttribute('data-card-style', styleName);
+      localStorage.setItem('tayeba_card_style', styleName);
+      const selectEl = document.getElementById('cardStyleSelect');
+      if (selectEl) selectEl.value = styleName;
+      renderPins();
+    }
+
+    setMarginTheme(currentMarginTheme);
+    document.getElementById('cardStyleSelect').value = currentCardStyle;
+
+    // Timer & Stopwatch Mode Logic
+    let timerInterval = null;
+    let timerRemainingSeconds = 25 * 60;
+    let timerInitialSeconds = 25 * 60;
+
+    let swInterval = null;
+    let swElapsedMs = 0;
+    let swRunning = false;
+    let swLaps = [];
+
+    function toggleClockWidget() {
+      document.getElementById('clockWidget').classList.toggle('active');
+    }
+
+    function switchClockTab(mode) {
+      const isTimer = mode === 'timer';
+      document.getElementById('timerPanel').style.display = isTimer ? 'block' : 'none';
+      document.getElementById('stopwatchPanel').style.display = isTimer ? 'none' : 'block';
+      document.getElementById('tabTimerMode').classList.toggle('active', isTimer);
+      document.getElementById('tabStopwatchMode').classList.toggle('active', !isTimer);
+    }
+
+    // Melodic Ringtone for Timer End (Music box & celeste chime)
+    function playTimerRingtone() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+
+        const melody = [
+          { freq: 587.33, dur: 0.18, time: 0.00 }, // D5
+          { freq: 659.25, dur: 0.18, time: 0.18 }, // E5
+          { freq: 783.99, dur: 0.22, time: 0.36 }, // G5
+          { freq: 880.00, dur: 0.22, time: 0.58 }, // A5
+          { freq: 1046.50, dur: 0.35, time: 0.80 }, // C6
+          { freq: 880.00, dur: 0.22, time: 1.15 }, // A5
+          { freq: 1046.50, dur: 0.55, time: 1.37 }, // C6
+
+          // Second phrase
+          { freq: 783.99, dur: 0.18, time: 2.10 }, // G5
+          { freq: 880.00, dur: 0.18, time: 2.28 }, // A5
+          { freq: 1046.50, dur: 0.22, time: 2.46 }, // C6
+          { freq: 1174.66, dur: 0.25, time: 2.68 }, // D6
+          { freq: 1318.51, dur: 0.70, time: 2.93 }  // E6
+        ];
+
+        const start = ctx.currentTime;
+        melody.forEach(note => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(note.freq, start + note.time);
+
+          gain.gain.setValueAtTime(0.0001, start + note.time);
+          gain.gain.exponentialRampToValueAtTime(0.3, start + note.time + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + note.time + note.dur + 0.5);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(start + note.time);
+          osc.stop(start + note.time + note.dur + 0.55);
+        });
+      } catch (e) {
+        console.warn("Could not play timer ringtone:", e);
+      }
+    }
+
+    function formatTimerDisplay(totalSec) {
+      const mins = Math.floor(totalSec / 60);
+      const secs = totalSec % 60;
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function updateTimerUI() {
+      document.getElementById('timerDisplay').innerText = formatTimerDisplay(timerRemainingSeconds);
+    }
+
+    function setTimerPreset(minutes) {
+      pauseTimer();
+      document.getElementById('customMinInput').value = minutes;
+      document.getElementById('customSecInput').value = 0;
+      timerInitialSeconds = minutes * 60;
+      timerRemainingSeconds = timerInitialSeconds;
+      updateTimerUI();
+    }
+
+    function applyCustomTimerInput() {
+      pauseTimer();
+      const mins = Math.max(0, parseInt(document.getElementById('customMinInput').value || '0', 10));
+      const secs = Math.max(0, Math.min(59, parseInt(document.getElementById('customSecInput').value || '0', 10)));
+      timerInitialSeconds = mins * 60 + secs;
+      timerRemainingSeconds = timerInitialSeconds;
+      updateTimerUI();
+    }
+
+    function startTimer() {
+      if (timerInterval) return;
+      if (timerRemainingSeconds <= 0) {
+        applyCustomTimerInput();
+        if (timerRemainingSeconds <= 0) return;
+      }
+      document.getElementById('timerStartBtn').innerText = "Running...";
+      timerInterval = setInterval(() => {
+        if (timerRemainingSeconds > 0) {
+          timerRemainingSeconds--;
+          updateTimerUI();
+        } else {
+          pauseTimer();
+          playTimerRingtone();
+          showNoticeDialog("Ding ding! Time is up! Great job focusing! ✨☁️", "Timer Finished ⏳");
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      document.getElementById('timerStartBtn').innerText = "Start";
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timerRemainingSeconds = timerInitialSeconds;
+      updateTimerUI();
+    }
+
+    function formatStopwatch(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      const tenths = Math.floor((ms % 1000) / 100);
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${tenths}`;
+    }
+
+    function startStopwatch() {
+      if (swRunning) return;
+      swRunning = true;
+      document.getElementById('swStartBtn').innerText = "Running...";
+      const startTime = Date.now() - swElapsedMs;
+      swInterval = setInterval(() => {
+        swElapsedMs = Date.now() - startTime;
+        document.getElementById('stopwatchDisplay').innerText = formatStopwatch(swElapsedMs);
+      }, 100);
+    }
+
+    function pauseStopwatch() {
+      swRunning = false;
+      clearInterval(swInterval);
+      swInterval = null;
+      document.getElementById('swStartBtn').innerText = "Start";
+    }
+
+    function lapStopwatch() {
+      if (swElapsedMs <= 0) return;
+      swLaps.unshift(formatStopwatch(swElapsedMs));
+      const lapList = document.getElementById('stopwatchLaps');
+      lapList.innerHTML = swLaps.map((t, i) => `<li><span>Lap ${swLaps.length - i}</span><strong>${t}</strong></li>`).join('');
+    }
+
+    function resetStopwatch() {
+      pauseStopwatch();
+      swElapsedMs = 0;
+      swLaps = [];
+      document.getElementById('stopwatchDisplay').innerText = "00:00:00.0";
+      document.getElementById('stopwatchLaps').innerHTML = "";
+    }
+
+    // UNSENT LETTERS FEATURE LOGIC
+    let letterBox = [];
+    try {
+      const storedLetters = localStorage.getItem('tayeba_diary_letters');
+      if (storedLetters) {
+        letterBox = JSON.parse(storedLetters);
+      }
+    } catch (e) {
+      letterBox = [];
+    }
+
+    // Live Sync Listener for Letters
+    if (lettersRef) {
+      lettersRef.on('value', (snapshot) => {
+        const cloudLetters = normalizeFirebaseArray(snapshot.val());
+        if (cloudLetters && cloudLetters.length > 0) {
+          letterBox = cloudLetters;
+          try {
+            localStorage.setItem('tayeba_diary_letters', JSON.stringify(letterBox));
+          } catch (e) {}
+          searchLetters();
+        } else if (snapshot.exists() === false && letterBox.length > 0) {
+          lettersRef.set(letterBox);
+        }
+      });
+    }
+
+    function openLettersModal() {
+      document.getElementById('lettersModal').classList.add('active');
+      document.getElementById('letterSearchInput').value = '';
+      searchLetters(); 
+      switchLetterTab('search');
+    }
+
+    function closeLettersModal() {
+      document.getElementById('lettersModal').classList.remove('active');
+    }
+
+    function switchLetterTab(tab) {
+      const isSearch = (tab === 'search');
+      document.getElementById('tabSearchLetters').classList.toggle('active', isSearch);
+      document.getElementById('tabWriteLetter').classList.toggle('active', !isSearch);
+      document.getElementById('lettersSearchBox').style.display = isSearch ? 'block' : 'none';
+      document.getElementById('lettersWriteBox').style.display = !isSearch ? 'block' : 'none';
+    }
+
+    function searchLetters() {
+      const q = document.getElementById('letterSearchInput').value.trim().toLowerCase();
+      const resultsContainer = document.getElementById('letterResults');
+      resultsContainer.innerHTML = '';
+
+      if (!q) {
+        resultsContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">Type a nickname to see if someone left a letter for them ☁️</p>';
+        return;
+      }
+
+      const foundLetters = letterBox.filter(l => l.to.toLowerCase().includes(q));
+
+      if (foundLetters.length === 0) {
+        resultsContainer.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">No letters found for this nickname...</p>';
+        return;
+      }
+
+      foundLetters.forEach(l => {
+        const div = document.createElement('div');
+        div.className = 'letter-card';
+        div.innerHTML = `
+          <div class="letter-to">To: ${escapeHTML(l.to)}</div>
+          <div class="letter-msg">${escapeHTML(l.msg)}</div>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:8px; text-align:right;">${l.date}</div>
+        `;
+        resultsContainer.appendChild(div);
+      });
+    }
+
+    function saveLetter() {
+      const toField = document.getElementById('newLetterTo');
+      const msgField = document.getElementById('newLetterMsg');
+      const to = toField.value.trim();
+      const msg = msgField.value.trim();
+
+      if (!to || !msg) {
+        showNoticeDialog("Please fill out both the nickname and your message!", "Oops!");
+        return;
+      }
+
+      letterBox.unshift({ 
+        to: to, 
+        msg: msg, 
+        date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) 
+      });
+      try {
+        localStorage.setItem('tayeba_diary_letters', JSON.stringify(letterBox));
+      } catch (e) {}
+      if (lettersRef) {
+        lettersRef.set(letterBox).catch(err => console.warn("Firebase letters sync notice:", err));
+      }
+      
+      toField.value = '';
+      msgField.value = '';
+      
+      showNoticeDialog("Your letter has been sent into the void ☁️💙");
+      switchLetterTab('search');
+    }
+
+    // GIFT BOX ANIMATION FOR SADAT
+    function openGiftModal() {
+      document.getElementById('giftModal').classList.add('active');
+      document.getElementById('giftTitle').innerText = "A Special Gift For You 🎁";
+      document.getElementById('theGift').classList.remove('opened');
+      
+      const gerberas = document.querySelectorAll('.gift-gerbera');
+      gerberas.forEach(g => g.classList.remove('pop'));
+
+      document.querySelectorAll('.confetti-piece').forEach(c => c.remove());
+    }
+
+    function closeGiftModal() {
+      document.getElementById('giftModal').classList.remove('active');
+    }
+
+    function triggerGiftAnimation() {
+      const gift = document.getElementById('theGift');
+      gift.classList.add('opened');
+      document.getElementById('giftTitle').innerText = "Ta-da! 🌸";
+
+      document.getElementById('gerberaRed').classList.add('pop');
+      setTimeout(() => document.getElementById('gerberaOrange').classList.add('pop'), 200);
+      setTimeout(() => document.getElementById('gerberaYellow').classList.add('pop'), 400);
+
+      const wrapper = document.getElementById('giftWrapper');
+      for (let i = 0; i < 35; i++) {
+        let conf = document.createElement('div');
+        conf.className = 'confetti-piece';
+        
+        conf.style.left = (45 + Math.random() * 10) + '%';
+        conf.style.top = '70%';
+        
+        let tx = (Math.random() - 0.5) * 450; 
+        let ty = (Math.random() - 1) * 350; 
+        conf.style.setProperty('--tx', tx + 'px');
+        conf.style.setProperty('--ty', ty + 'px');
+        
+        const colors = ['#ff4d4d', '#ffa64d', '#ffd24d', '#ff9a9e'];
+        conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+        
+        wrapper.appendChild(conf);
+        setTimeout(() => conf.classList.add('pop-confetti'), Math.random() * 200);
+      }
+    }
+
+    // FULL TEXT READ MODAL (For visitors and creator)
+    function openReadModal(id) {
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+
+      document.getElementById('readMood').innerText = note.mood || '✨ Memory';
+      document.getElementById('readDate').innerText = note.date || '';
+      document.getElementById('readTitle').innerText = note.title || 'Untitled Memory ☁️';
+
+      const mediaWrap = document.getElementById('readMediaWrapper');
+      if (note.image) {
+        const pinId = !isDirectImageUrl(note.image) ? extractPinterestPinId(note.image) : null;
+        if (pinId) {
+          mediaWrap.innerHTML = `<iframe class="pin-embed" src="https://assets.pinterest.com/ext/embed.html?id=${pinId}" scrolling="no"></iframe>`;
+        } else {
+          mediaWrap.innerHTML = `<img src="${note.image}" alt="Memory image" referrerpolicy="no-referrer" />`;
+        }
+        mediaWrap.style.display = 'block';
+      } else {
+        mediaWrap.style.display = 'none';
+        mediaWrap.innerHTML = '';
+      }
+
+      const contentEl = document.getElementById('readContent');
+      if (note.type === 'plan' && note.tasks && note.tasks.length > 0) {
+        const items = note.tasks.map((t, idx) => `
+          <li class="task-item ${t.done ? 'done' : ''} ${isSadatMode ? 'readonly-task' : ''}" ${isSadatMode ? '' : `onclick="toggleTask(${note.id}, ${idx}); openReadModal(${note.id});"`}>
+            <input type="checkbox" ${t.done ? 'checked' : ''} ${isSadatMode ? 'disabled' : ''} onclick="event.stopPropagation(); toggleTask(${note.id}, ${idx}); openReadModal(${note.id});" />
+            <span>${escapeHTML(t.text)}</span>
+          </li>
+        `).join('');
+        contentEl.innerHTML = `<ul class="task-list">${items}</ul>`;
+      } else {
+        contentEl.innerText = note.content || '(No additional text in this note)';
+      }
+
+      document.getElementById('readModal').classList.add('active');
+    }
+
+    function closeReadModal() {
+      document.getElementById('readModal').classList.remove('active');
+    }
+
+    // Load Notes Safely
+    let notes = [];
+    try {
+      const stored = localStorage.getItem('tayeba_diary_pins_v3');
+      if (stored) {
+        notes = JSON.parse(stored);
+      }
+    } catch (e) {
+      notes = [];
+    }
+
+    // Automatic purge of any note mentioning the creator password
+    if (Array.isArray(notes)) {
+      notes = notes.filter(n => !(n.content && n.content.toLowerCase().includes('snowie')));
+    }
+
+    // Clean initial welcome pin (completely hides and removes password mentions)
+    if (!Array.isArray(notes) || notes.length === 0) {
+      notes = [
+        {
+          id: 1,
+          type: 'note',
+          title: "Welcome to Tayeba's Diary 💙",
+          mood: "🤩 Overjoyed",
+          date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+          content: "Welcome to your personal diary space ☁️💙\n\nPaste any Pinterest link or upload photos to pin your favorite memories, thoughts, and daily plans!\n\nClick '📖 Read' on any note to view its full memory.",
+          tasks: [],
+          image: "",
+          sticker: "☁️",
+          washi: true,
+          polaroid: true
+        }
+      ];
+      try {
+        localStorage.setItem('tayeba_diary_pins_v3', JSON.stringify(notes));
+      } catch (e) {}
+    }
+
+    // Live Cloud Sync for Pins & Plans
+    if (pinsRef) {
+      pinsRef.on('value', (snapshot) => {
+        const cloudPins = normalizeFirebaseArray(snapshot.val());
+        if (cloudPins && cloudPins.length > 0) {
+          notes = cloudPins.filter(n => !(n && n.content && n.content.toLowerCase().includes('snowie')));
+          try {
+            localStorage.setItem('tayeba_diary_pins_v3', JSON.stringify(notes));
+          } catch (e) {}
+          renderPins();
+        } else if (snapshot.exists() === false && notes.length > 0) {
+          // Upload initial notes to cloud database if cloud is empty
+          pinsRef.set(notes);
+        }
+      });
+    }
+
+    let currentFilter = 'ALL';
+    let currentImageSource = "";
+
+    function saveToStorage() {
+      try {
+        localStorage.setItem('tayeba_diary_pins_v3', JSON.stringify(notes));
+      } catch (e) {
+        console.warn("Storage quota:", e);
+      }
+      if (pinsRef) {
+        pinsRef.set(notes).catch(err => {
+          console.warn("Firebase pins sync notice:", err);
+        });
+      }
+    }
+
+    function isDirectImageUrl(url) {
+      if (!url) return false;
+      return (
+        url.startsWith('data:image/') ||
+        url.includes('i.pinimg.com') ||
+        /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url)
+      );
+    }
+
+    function extractPinterestPinId(url) {
+      if (!url) return null;
+      const match = url.match(/pinterest\.[a-z.]+\/pin\/(?:.*--)?(\d+)/i);
+      return match ? match[1] : null;
+    }
+
+    async function resolvePinterestImage(url) {
+      try {
+        const res = await fetch('https://api.microlink.io/?url=' + encodeURIComponent(url));
+        const json = await res.json();
+        if (json && json.status === 'success' && json.data && json.data.image && json.data.image.url) {
+          return json.data.image.url;
+        }
+      } catch (err) {
+        console.warn("Could not auto-resolve Pinterest link:", err);
+      }
+      return url;
+    }
+
+    async function autoFixSavedPinterestLinks() {
+      let updated = false;
+      for (let note of notes) {
+        if (note.image && note.image.startsWith('http') && !isDirectImageUrl(note.image)) {
+          const directUrl = await resolvePinterestImage(note.image);
+          if (directUrl && directUrl !== note.image) {
+            note.image = directUrl;
+            updated = true;
+          }
+        }
+      }
+      if (updated) {
+        saveToStorage();
+        renderPins();
+      }
+    }
+
+    function setFilter(filterVal, btnElement) {
+      currentFilter = filterVal;
+      document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      renderPins();
+    }
+
+    function toggleTask(noteId, taskIndex) {
+      if (isSadatMode) return;
+
+      const note = notes.find(n => n.id === noteId);
+      if (note && note.tasks && note.tasks[taskIndex]) {
+        note.tasks[taskIndex].done = !note.tasks[taskIndex].done;
+        saveToStorage();
+        renderPins();
+      }
+    }
+
+    function renderPins() {
+      const grid = document.getElementById('masonryGrid');
+      const emptyState = document.getElementById('emptyState');
+      const query = (document.getElementById('searchInput').value || '').toLowerCase();
+
+      const filtered = notes.filter(note => {
+        const matchesFilter =
+          currentFilter === 'ALL' ||
+          (currentFilter === 'PLAN' && note.type === 'plan') ||
+          note.mood === currentFilter;
+
+        const taskText = (note.tasks || []).map(t => t.text).join(' ').toLowerCase();
+        const matchesSearch =
+          (note.title || '').toLowerCase().includes(query) ||
+          (note.content || '').toLowerCase().includes(query) ||
+          (note.mood || '').toLowerCase().includes(query) ||
+          taskText.includes(query);
+
+        return matchesFilter && matchesSearch;
+      });
+
+      grid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      emptyState.style.display = 'none';
+
+      filtered.forEach(note => {
+        const card = document.createElement('div');
+        const activeStyleClass = `style-${currentCardStyle || 'washi'}`;
+        card.className = `pin-card ${note.type === 'plan' ? 'plan-card' : ''} ${activeStyleClass}`;
+
+        const defaultStickers = ['🌸', '🌿', '✨', '🦋', '💧'];
+        const fallbackSticker = defaultStickers[Math.abs(Number(note.id) || 0) % defaultStickers.length];
+        const chosenSticker = (note.sticker !== undefined && note.sticker !== '') ? note.sticker : fallbackSticker;
+        const stickerHTML = note.sticker === '' ? '' : `<span class="corner-sticker">${chosenSticker}</span>`;
+
+        let mediaHTML = '';
+        if (note.image) {
+          const pinId = !isDirectImageUrl(note.image) ? extractPinterestPinId(note.image) : null;
+          if (pinId) {
+            mediaHTML = `<div class="media-frame"><iframe class="pin-embed" src="https://assets.pinterest.com/ext/embed.html?id=${pinId}" scrolling="no"></iframe></div>`;
+          } else {
+            mediaHTML = `<div class="media-frame"><img src="${note.image}" alt="Pinned memory" class="pin-image" referrerpolicy="no-referrer" /></div>`;
+          }
+        }
+
+        let bodyHTML = '';
+        if (note.type === 'plan' && note.tasks && note.tasks.length > 0) {
+          const items = note.tasks.map((t, idx) => `
+            <li class="task-item ${t.done ? 'done' : ''} ${isSadatMode ? 'readonly-task' : ''}" ${isSadatMode ? '' : `onclick="toggleTask(${note.id}, ${idx})"`}>
+              <input type="checkbox" ${t.done ? 'checked' : ''} ${isSadatMode ? 'disabled' : ''} onclick="event.stopPropagation(); toggleTask(${note.id}, ${idx})" />
+              <span>${escapeHTML(t.text)}</span>
+            </li>
+          `).join('');
+          bodyHTML = `<ul class="task-list">${items}</ul>`;
+        } else {
+          const isLong = (note.content || '').length > 220;
+          bodyHTML = `<p class="pin-content ${isLong ? 'has-overflow' : ''}" onclick="openReadModal(${note.id})">${escapeHTML(note.content || '')}</p>`;
+        }
+
+        // Action buttons: "Read" is available for both Visitor & Creator
+        let footerHTML = '';
+        if (isSadatMode) {
+          footerHTML = `
+            <div class="pin-footer" style="justify-content: flex-start;">
+              <button type="button" class="icon-btn read-btn" onclick="openReadModal(${note.id})">📖 Read Note</button>
+            </div>
+          `;
+        } else {
+          footerHTML = `
+            <div class="pin-footer">
+              <button type="button" class="icon-btn read-btn" onclick="openReadModal(${note.id})">📖 Read</button>
+              <button type="button" class="icon-btn" onclick="editNote(${note.id})">Edit</button>
+              <button type="button" class="icon-btn delete" onclick="deleteNote(${note.id})">Delete</button>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="washi-tape"></div>
+          ${stickerHTML}
+          <span class="scrapbook-flower-badge">🌿🌸</span>
+          ${mediaHTML}
+          <div class="pin-meta">
+            <span class="mood-tag">${note.mood}</span>
+            <span>${note.date}</span>
+          </div>
+          ${note.title ? `<h3 class="pin-title" onclick="openReadModal(${note.id})">${escapeHTML(note.title)}</h3>` : ''}
+          ${bodyHTML}
+          ${footerHTML}
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function switchEntryType(type) {
+      document.getElementById('entryType').value = type;
+      const tabNote = document.getElementById('tabNote');
+      const tabPlan = document.getElementById('tabPlan');
+      const contentLabel = document.getElementById('contentLabel');
+      const noteContent = document.getElementById('noteContent');
+
+      if (type === 'plan') {
+        tabPlan.classList.add('active');
+        tabNote.classList.remove('active');
+        contentLabel.innerText = "Your Tasks / Plans (One per line)";
+        noteContent.placeholder = "Drink water\nFinish homework\nSave Pinterest pins...";
+      } else {
+        tabNote.classList.add('active');
+        tabPlan.classList.remove('active');
+        contentLabel.innerText = "Write your heart out";
+        noteContent.placeholder = "Dear diary...";
+      }
+    }
+
+    function openModal(defaultType = 'note', isEdit = false) {
+      if (isSadatMode) return;
+      document.getElementById('noteModal').classList.add('active');
+      if (!isEdit) {
+        document.getElementById('modalTitle').innerText = defaultType === 'plan' ? "New Task / Plan ☑️" : "New Diary Pin 🦋";
+        document.getElementById('editId').value = "";
+        document.getElementById('noteTitle').value = "";
+        document.getElementById('noteContent').value = "";
+        document.getElementById('noteMood').value = "😊 Happy";
+        document.getElementById('noteSticker').value = "☁️";
+        document.getElementById('noteWashiCheck').checked = true;
+        document.getElementById('notePolaroidCheck').checked = true;
+        switchEntryType(defaultType);
+        removeSelectedImage();
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('noteModal').classList.remove('active');
+    }
+
+    let urlFetchTimeout = null;
+    function handleImageUrl(url) {
+      const trimmed = url.trim();
+      const statusEl = document.getElementById('pinStatus');
+      clearTimeout(urlFetchTimeout);
+
+      if (!trimmed) {
+        statusEl.style.display = 'none';
+        removeSelectedImage();
+        return;
+      }
+
+      if (isDirectImageUrl(trimmed)) {
+        statusEl.style.display = 'none';
+        currentImageSource = trimmed;
+        document.getElementById('imagePreview').src = trimmed;
+        document.getElementById('previewWrapper').style.display = 'block';
+        return;
+      }
+
+      statusEl.style.display = 'block';
+      statusEl.innerText = "⏳ Grabbing photo from Pinterest link...";
+      currentImageSource = trimmed;
+
+      urlFetchTimeout = setTimeout(async () => {
+        const directImg = await resolvePinterestImage(trimmed);
+        currentImageSource = directImg;
+        statusEl.style.display = 'none';
+        document.getElementById('imagePreview').src = directImg;
+        document.getElementById('previewWrapper').style.display = 'block';
+      }, 300);
+    }
+
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = function () {
+          const canvas = document.createElement('canvas');
+          const maxWidth = 650;
+          const scale = maxWidth / img.width;
+          canvas.width = img.width > maxWidth ? maxWidth : img.width;
+          canvas.height = img.width > maxWidth ? img.height * scale : img.height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          currentImageSource = canvas.toDataURL('image/jpeg', 0.75);
+
+          document.getElementById('imageUrlInput').value = "";
+          document.getElementById('pinStatus').style.display = 'none';
+          document.getElementById('imagePreview').src = currentImageSource;
+          document.getElementById('previewWrapper').style.display = 'block';
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeSelectedImage() {
+      currentImageSource = "";
+      document.getElementById('imageInput').value = "";
+      document.getElementById('imageUrlInput').value = "";
+      document.getElementById('pinStatus').style.display = 'none';
+      document.getElementById('previewWrapper').style.display = 'none';
+      document.getElementById('imagePreview').src = "";
+    }
+
+    async function saveNote() {
+      if (isSadatMode) return;
+      const id = document.getElementById('editId').value;
+      const type = document.getElementById('entryType').value;
+      const title = document.getElementById('noteTitle').value.trim();
+      const mood = document.getElementById('noteMood').value;
+      const sticker = document.getElementById('noteSticker').value;
+      const washi = document.getElementById('noteWashiCheck').checked;
+      const polaroid = document.getElementById('notePolaroidCheck').checked;
+      const rawContent = document.getElementById('noteContent').value.trim();
+      const saveBtn = document.getElementById('saveBtn');
+
+      if (!title && !rawContent && !currentImageSource) {
+        showNoticeDialog("Write something or add a photo before saving!");
+        return;
+      }
+
+      if (currentImageSource && currentImageSource.startsWith('http') && !isDirectImageUrl(currentImageSource)) {
+        saveBtn.innerText = "Grabbing Pinterest Photo... ⏳";
+        saveBtn.disabled = true;
+        currentImageSource = await resolvePinterestImage(currentImageSource);
+        saveBtn.innerText = "Save to Diary 💙";
+        saveBtn.disabled = false;
+      }
+
+      let tasks = [];
+      let content = rawContent;
+
+      if (type === 'plan') {
+        const lines = rawContent.split('\n').map(l => l.trim()).filter(l => l !== '');
+        const existingNote = id ? notes.find(n => n.id == id) : null;
+        tasks = lines.map(line => {
+          const prevTask = existingNote && existingNote.tasks
+            ? existingNote.tasks.find(t => t.text === line)
+            : null;
+          return { text: line, done: prevTask ? prevTask.done : false };
+        });
+        content = "";
+      }
+
+      if (id) {
+        const index = notes.findIndex(n => n.id == id);
+        if (index !== -1) {
+          notes[index].type = type;
+          notes[index].title = title;
+          notes[index].mood = mood;
+          notes[index].content = content;
+          notes[index].tasks = tasks;
+          notes[index].image = currentImageSource;
+          notes[index].sticker = sticker;
+          notes[index].washi = washi;
+          notes[index].polaroid = polaroid;
+        }
+      } else {
+        notes.unshift({
+          id: Date.now(),
+          type,
+          title,
+          mood,
+          date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+          content,
+          tasks,
+          image: currentImageSource,
+          sticker,
+          washi,
+          polaroid
+        });
+      }
+
+      saveToStorage();
+      renderPins();
+      closeModal();
+    }
+
+    function editNote(id) {
+      if (isSadatMode) return;
+      const note = notes.find(n => n.id === id);
+      if (!note) return;
+
+      openModal(note.type || 'note', true);
+      document.getElementById('modalTitle').innerText = "Edit Pin ✏️";
+      document.getElementById('editId').value = note.id;
+      switchEntryType(note.type || 'note');
+      document.getElementById('noteTitle').value = note.title;
+      document.getElementById('noteMood').value = note.mood;
+      document.getElementById('noteSticker').value = note.sticker !== undefined ? note.sticker : "☁️";
+      document.getElementById('noteWashiCheck').checked = note.washi !== false;
+      document.getElementById('notePolaroidCheck').checked = note.polaroid !== false;
+
+      if (note.type === 'plan' && note.tasks) {
+        document.getElementById('noteContent').value = note.tasks.map(t => t.text).join('\n');
+      } else {
+        document.getElementById('noteContent').value = note.content || '';
+      }
+
+      if (note.image) {
+        currentImageSource = note.image;
+        if (note.image.startsWith('http')) {
+          document.getElementById('imageUrlInput').value = note.image;
+        }
+        document.getElementById('imagePreview').src = note.image;
+        document.getElementById('previewWrapper').style.display = 'block';
+      } else {
+        removeSelectedImage();
+      }
+    }
+
+    function deleteNote(id) {
+      if (isSadatMode) return;
+      showConfirmDialog("Delete this pin from your diary?", function() {
+        notes = notes.filter(n => n.id !== id);
+        saveToStorage();
+        renderPins();
+      });
+    }
+
+    function escapeHTML(str) {
+      return String(str).replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag]));
+    }
+
+    renderPins();
+    autoFixSavedPinterestLinks();
+  </script>
+</body>
+</html>
